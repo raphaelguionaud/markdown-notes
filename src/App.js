@@ -1,10 +1,63 @@
 import React from "react";
 import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import "./App.css";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
+
+    const defaultText = `# Quick introduction to Markdown (press Ctrl/Cmd + S to save):
+
+## Subtitles
+
+### Subtitle
+
+## Bulleted list
+
+* first item
+* second item
+
+## Numbered list
+
+1. first item
+2. second item
+
+## Tasklist
+
+* [ ] to do
+* [x] done
+
+## Links
+
+[This](example.com) is an example link
+
+## Autolink literals
+
+www.example.com, https://example.com, and contact@example.com.
+
+## Code
+
+\`\`\`
+helloWorld = () => {
+    console.log('hello world!');
+};
+\`\`\`
+
+## Footnote
+
+A note[^1]
+
+[^1]: Big note.
+
+## Strikethrough
+
+~one~ or ~~two~~ tildes.
+
+## Table
+
+| a | b  |  c |  d  |
+| - | :- | -: | :-: |`;
 
     const storage = localStorage.getItem("text");
     const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
@@ -15,15 +68,28 @@ class App extends React.Component {
             text: storage,
             isMac: isMac,
           }
-        : { text: "", isMac: isMac };
+        : { text: defaultText, isMac: isMac };
   }
 
-  _onKeyDown = ({ nativeEvent }) => {
+  onKeyDown = (event) => {
+    const { nativeEvent, target } = event;
+
+    if (nativeEvent.keyCode === 9) {
+      nativeEvent.preventDefault();
+
+      const { selectionStart, selectionEnd, value } = target;
+      const newValue =
+        value.substring(0, selectionStart) +
+        "\t" +
+        value.substring(selectionEnd);
+
+      this.setState({ text: newValue }, () => {
+        target.selectionStart = target.selectionEnd = selectionStart + 1;
+      });
+    }
+
     if (this.state.isMac) {
-      if (
-        (nativeEvent.keyCode === 91 || nativeEvent.keyCode === 93) &&
-        nativeEvent.keyCode === 83
-      ) {
+      if (nativeEvent.metaKey && nativeEvent.keyCode === 83) {
         nativeEvent.preventDefault();
         this.save();
       }
@@ -37,7 +103,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App" onKeyDown={this._onKeyDown}>
+      <div className="App" onKeyDown={this.onKeyDown}>
         <header className="App-header">
           <section className="main">
             <div className="raw">
@@ -47,7 +113,9 @@ class App extends React.Component {
               ></textarea>
             </div>
             <div className="markdown-container">
-              <Markdown className="markdown">{this.state.text}</Markdown>
+              <Markdown remarkPlugins={[remarkGfm]} className="markdown">
+                {this.state.text}
+              </Markdown>
             </div>
           </section>
           <section className="save">
@@ -63,126 +131,6 @@ class App extends React.Component {
       text: event.target.value,
     });
   };
-
-  // isUnorderedList(line) {
-  //   return line.length > 2 && line[0] === "*" && line[1] === " ";
-  // }
-
-  // isOrderedList(line) {
-  //   const pointIndex = line.indexOf(".");
-  //   const spaceIndex = line.indexOf(" ");
-  //   const substring = line.substring(0, pointIndex);
-
-  //   if (
-  //     pointIndex === -1 ||
-  //     spaceIndex === -1 ||
-  //     isNaN(substring) ||
-  //     isNaN(parseFloat(substring))
-  //   ) {
-  //     return false;
-  //   }
-
-  //   return true;
-  // }
-
-  // isLargeHeading(line) {
-  //   return line.length > 2 && line[0] === "#" && line[1] === " ";
-  // }
-
-  // isMediumHeading(line) {
-  //   return (
-  //     line.length > 3 && line[0] === "#" && line[1] === "#" && line[2] === " "
-  //   );
-  // }
-
-  // isSmallHeading(line) {
-  //   return (
-  //     line.length > 4 &&
-  //     line[0] === "#" &&
-  //     line[1] === "#" &&
-  //     line[2] === "#" &&
-  //     line[3] === " "
-  //   );
-  // }
-
-  // parseLine(line) {
-  //   const stack = [];
-  //   let res = [];
-
-  //   for (let i = 0; i < line.length; i++) {
-  //     const char = line.charAt(i);
-
-  //     if (stack.length && stack[0] === "*") {
-  //       if (char === "*") {
-  //         stack.shift();
-  //         let string = "";
-
-  //         while (stack.length > 0) {
-  //           string += stack.shift();
-  //         }
-
-  //         res.push(<i>{string}</i>);
-  //         continue;
-  //       } else {
-  //         stack.push(char);
-  //         continue;
-  //       }
-  //     }
-
-  //     if (char === "*") {
-  //       stack.push(char);
-  //       continue;
-  //     }
-
-  //     res.push(char);
-  //   }
-
-  //   if (stack.length > 0) {
-  //     res.push(stack.join(""));
-  //   }
-
-  //   return res;
-  // }
-
-  // textToMarkdown(text) {
-  //   const lines = text.split("\n");
-
-  //   return lines.map((line) => {
-  //     if (line === "") {
-  //       return <div>&nbsp;</div>;
-  //     }
-
-  //     if (this.isOrderedList(line)) {
-  //       return (
-  //         <ol>
-  //           <li>{this.parseLine(line.slice(1))}</li>
-  //         </ol>
-  //       );
-  //     }
-
-  //     if (this.isUnorderedList(line)) {
-  //       return (
-  //         <ul>
-  //           <li>{this.parseLine(line.slice(1))}</li>
-  //         </ul>
-  //       );
-  //     }
-
-  //     if (this.isLargeHeading(line)) {
-  //       return <h1>{this.parseLine(line.slice(1))}</h1>;
-  //     }
-
-  //     if (this.isMediumHeading(line)) {
-  //       return <h2>{this.parseLine(line.slice(2))}</h2>;
-  //     }
-
-  //     if (this.isSmallHeading(line)) {
-  //       return <h3>{this.parseLine(line.slice(3))}</h3>;
-  //     }
-
-  //     return <div>{this.parseLine(line)}</div>;
-  //   });
-  // }
 
   save() {
     localStorage.setItem("text", this.state.text);
