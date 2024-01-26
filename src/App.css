@@ -15,10 +15,6 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
 .main {
   display: grid;
   grid-template-columns: 1fr 1fr;
