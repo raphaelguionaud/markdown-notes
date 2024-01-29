@@ -123,6 +123,8 @@ textarea {
 
 .save {
   background-color: transparent;
+  padding: 16px 20px;
+  width: calc(100% - 40px);
 }
 
 .save button {
@@ -132,8 +134,9 @@ textarea {
   border-radius: 4px;
   padding: 0 12px;
   cursor: pointer;
+  font-weight: 600;
 }
 
 .save button:hover {
-  background-color: rgb(41, 173, 91);
+  background-color: #2fa044;
 }
