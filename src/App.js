@@ -59,6 +59,7 @@ class App extends React.Component {
               <textarea
                 onChange={this.handleChange}
                 value={this.state.text}
+                data-testid="textarea"
               ></textarea>
             </div>
             <div className="markdown-container">
