@@ -18,7 +18,73 @@
 .main {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: 100vh;
+  height: calc(100vh - 44px);
+}
+
+.tabs {
+  display: flex;
+  font-size: 14px;
+  background-color: #161b22;
+  padding: 6px 8px;
+  column-gap: 8px;
+  overflow-x: auto;
+}
+
+.tab {
+  padding: 6px 8px 6px 12px;
+  cursor: default;
+  display: flex;
+  justify-content: space-between;
+  color: #858d97;
+  border-radius: 8px;
+  align-items: baseline;
+}
+
+.tab:hover {
+  background-color: #004a78;
+  color: #ffffff;
+}
+
+.active {
+  color: #ffffff;
+  background-color: #3c3c3c;
+}
+
+.tabs > .active:hover {
+  background-color: #3c3c3c;
+}
+
+.tabtext {
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 50px;
+}
+
+.newtab {
+  padding: 0;
+  height: 32px;
+  width: 32px;
+  aspect-ratio: 1/1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+}
+
+.delete {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+}
+
+.delete:hover {
+  background-color: #34678d;
 }
 
 .save {
@@ -45,6 +111,7 @@
   overflow-y: auto;
   word-wrap: break-word;
   text-align: left;
+  height: calc(100% - 24px);
 }
 
 .markdown {
