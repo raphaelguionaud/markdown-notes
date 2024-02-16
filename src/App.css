@@ -57,7 +57,6 @@
 .tabtext {
   overflow-x: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis;
   width: 50px;
 }
 

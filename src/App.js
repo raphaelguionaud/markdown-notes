@@ -39,9 +39,14 @@ class App extends React.Component {
         }
       }
     } else {
-      if (nativeEvent.ctrlKey && nativeEvent.keyCode === 83) {
-        nativeEvent.preventDefault();
-        this.save();
+      if (nativeEvent.ctrlKey) {
+        if (nativeEvent.keyCode === 83) {
+          nativeEvent.preventDefault();
+          this.save();
+        } else if (nativeEvent.keyCode === 88) {
+          nativeEvent.preventDefault();
+          this.deleteLine(target);
+        }
       }
     }
   };
@@ -54,7 +59,7 @@ class App extends React.Component {
           className={this.state.activeTab === index ? "tab active" : "tab"}
           onClick={() => this.selectTab(index)}
         >
-          <div className="tabtext">{tab.replace(/[^a-zA-Z0-9_ ]*$/g, "")}</div>
+          <div className="tabtext">{tab.replace(/[^a-zA-Z0-9_ ]/g, "")}</div>
           <div
             className="delete"
             onClick={(event) => this.deleteTab(index, event)}
